@@ -16,7 +16,7 @@ const classifier = await pipeline(
     // 'Xenova/vit-base-patch16-224',
     'Organika/sdxl-detector',
     {
-        device: 'webgpu',
+        device: 'webgpu', // or 'wasm'
         revision: 'refs/pr/3',
         dtype: 'fp32'
     },
