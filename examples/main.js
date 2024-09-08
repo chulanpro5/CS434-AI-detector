@@ -17,7 +17,7 @@ const classifier = await pipeline(
     'Organika/sdxl-detector',
     {
         device: 'webgpu', // or 'wasm'
-        revision: 'refs/pr/3',
+        revision: 'main',
         dtype: 'fp32'
     },
 );
