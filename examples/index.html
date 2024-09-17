@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="style.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Transformers.js - Image Classification demo</title>
+    <title>AI-Generated Image Detector</title>
 </head>
 
 <body>
@@ -14,12 +14,16 @@
             <input id="file-upload" type="file" accept="image/*" />
             <img class="upload-icon"
                 src="https://huggingface.co/datasets/Xenova/transformers.js-docs/resolve/main/upload-icon.png" />
-            Upload image
+            <span>Upload Image</span>
         </label>
+
         <div id="image-container"></div>
+        <div class="loader" id="loader" style="display:none;"></div> <!-- Added loader -->
         <p id="status"></p>
+
         <div id="result-container"></div>
     </main>
+
     <script src="main.js" type="module"></script>
 </body>
 

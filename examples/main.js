@@ -1,37 +1,26 @@
 import { pipeline, env } from '@huggingface/transformers';
 
-// Since we will download the model from the Hugging Face Hub, we can skip the local model check
 env.allowLocalModels = false;
 
-// Reference the elements that we will need
 const status = document.getElementById('status');
 const fileUpload = document.getElementById('file-upload');
 const imageContainer = document.getElementById('image-container');
 const resultContainer = document.getElementById('result-container');
+const loader = document.getElementById('loader'); // Reference to loader
 
-// Create a new image classification pipeline
 status.textContent = 'Loading model...';
-const classifier = await pipeline(
-    'image-classification',
-    // 'Xenova/vit-base-patch16-224',
-    'Organika/sdxl-detector',
-    {
-        device: 'webgpu', // or 'wasm'
-        revision: 'main',
-        dtype: 'fp32'
-    },
-);
+const classifier = await pipeline('image-classification', 'Organika/sdxl-detector', {
+    device: 'webgpu',
+    revision: 'main',
+    dtype: 'fp32'
+});
 status.textContent = 'Ready';
 
 fileUpload.addEventListener('change', function (e) {
     const file = e.target.files[0];
-    if (!file) {
-        return;
-    }
+    if (!file) return;
 
     const reader = new FileReader();
-
-    // Set up a callback when the file is loaded
     reader.onload = function (e2) {
         imageContainer.innerHTML = '';
         const image = document.createElement('img');
@@ -42,21 +31,22 @@ fileUpload.addEventListener('change', function (e) {
     reader.readAsDataURL(file);
 });
 
-// Classify the image
 async function classify(img) {
-    status.textContent = 'Analysing...';
+    loader.style.display = 'block'; // Show loader
+    status.textContent = 'Analyzing...';
     const output = await classifier(img.src);
     status.textContent = '';
+    loader.style.display = 'none'; // Hide loader
     displayResults(output);
 }
 
-// Display the classification results
 function displayResults(results) {
     resultContainer.innerHTML = '<h2>Classification Results:</h2>';
     const ul = document.createElement('ul');
     results.forEach(({ label, score }) => {
         const li = document.createElement('li');
         li.textContent = `${label}: ${(score * 100).toFixed(2)}%`;
+        li.className = score >= 0.75 ? 'high-certainty' : 'low-certainty'; // Add class based on certainty
         ul.appendChild(li);
     });
     resultContainer.appendChild(ul);
