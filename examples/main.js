@@ -34,9 +34,17 @@ fileUpload.addEventListener('change', function (e) {
 async function classify(img) {
     loader.style.display = 'block'; // Show loader
     status.textContent = 'Analyzing...';
+
+    const startTime = performance.now(); // Capture the start time
+
     const output = await classifier(img.src);
-    status.textContent = '';
+
+    const endTime = performance.now(); // Capture the end time
+    const runningTime = (endTime - startTime).toFixed(2); // Calculate the running time in milliseconds
+
+    status.textContent = `Analysis completed in ${runningTime} ms`; // Display the running time
     loader.style.display = 'none'; // Hide loader
+
     displayResults(output);
 }
 
